@@ -21,7 +21,7 @@ import {
 } from "@ant-design/icons-vue";
 import { reactive, ref, h } from "vue";
 import { FormState } from "./interface";
-import { rules } from "./utils";
+import { rules, logoImg } from "./utils";
 import type { UnwrapRef } from "vue";
 
 
@@ -37,6 +37,7 @@ const mobileLoginFormRef = ref();
 //账号密码登录的表单Ref
 const accountLoginFormRef = ref();
 
+//数据表单（两种登录方式共用一个formState）
 const formState: UnwrapRef<FormState> = reactive({
     user: "",
     password: "",
@@ -78,22 +79,22 @@ const changeTabs = () => {
  * 提交登陆表单
  */
 const submit = async () => {
-
-
     try {
         //检验表单
         if (activeKey.value === "1") {
-            await accountLoginFormRef.value.validateFields();
+            await accountLoginFormRef.value.validateFields()
         } else {
-            await mobileLoginFormRef.value.validateFields();
+            await mobileLoginFormRef.value.validateFields()
         }
         spinning.value = true;
         setTimeout(() => {
             spinning.value = false;
         }, 2000);
     } catch (e: any) {
+        let { errorFields } = e
+        let { errors = [] } = { ...errorFields[0] }
         spinning.value = false;
-        message.error(`${e.errorFields[0].errors[0]}`);
+        message.error(`${errors[0]}`)
     }
 
 
@@ -101,10 +102,10 @@ const submit = async () => {
 </script>
 
 <template>
-    <div style="backdrop-filter: blur(4px)">
+    <div>
         <Card class="login_body">
             <div class="logo_area">
-                <img class="logo_area_img" alt="Vue logo" src="../../assets/logo.png" />
+                <img class="logo_area_img" alt="Vue logo" :src="logoImg" />
             </div>
             <Spin tip="登录中..." size="large" :indicator="indicator" :spinning="spinning">
                 <Tabs v-model:activeKey="activeKey" @change="changeTabs" centered animated>
@@ -117,7 +118,6 @@ const submit = async () => {
                                     </template>
                                 </Input>
                             </FormItem>
-
                             <FormItem name="password">
                                 <InputPassword
                                     v-model:value="formState.password"
@@ -142,9 +142,7 @@ const submit = async () => {
                             </FormItem>
 
                             <FormItem name="verificationCode">
-                                <div
-                                    style="width: 350px; display: flex; justify-content: space-between"
-                                >
+                                <div class="login_verification_code">
                                     <div>
                                         <Input
                                             v-model:value="formState.verificationCode"
@@ -163,7 +161,7 @@ const submit = async () => {
                         </Form>
                     </TabPane>
                 </Tabs>
-                <div style="display: flex; justify-content: space-between">
+                <div class="login_option_group">
                     <Checkbox v-model:checked="checked">自动登录</Checkbox>
                     <!-- <Button type="link">忘记密码</Button> -->
                     <a>忘记密码</a>
@@ -178,26 +176,35 @@ const submit = async () => {
 </template>
 
 <style lang="scss" scoped>
-.logo_area {
-    width: 100%;
-    height: 100px;
-    text-align: center;
-    .logo_area_img {
-        width: 80px;
-    }
-}
-
 .login_body {
     width: 400px;
     height: 450px;
     box-shadow: 3px 3px 5px #5a5a5a;
-}
-.button_group {
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
-    .button {
+    .logo_area {
+        width: 100%;
+        height: 100px;
+        text-align: center;
+        .logo_area_img {
+            width: 80px;
+        }
+    }
+    .login_option_group {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .login_verification_code {
+        width: 350px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .button_group {
+        display: flex;
+        flex-direction: column;
         margin-top: 10px;
+        .button {
+            margin-top: 10px;
+        }
     }
 }
 </style>

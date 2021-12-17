@@ -1,11 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router' //引入vue-router-4.0
-import type { RouteRecordRaw, Router } from 'vue-router' 
+import type { RouteRecordRaw, Router } from 'vue-router'
 
 
 //项目静态路由表
-export const constantRoutes:RouteRecordRaw[] = [
+export const constantRoutes: RouteRecordRaw[] = [
     {
-        path:'/',
+        path: '/',
         redirect: '/login'
 
     },
@@ -15,7 +15,7 @@ export const constantRoutes:RouteRecordRaw[] = [
     }
 ]
 
-const router:Router = createRouter({
+const router: Router = createRouter({
     history: createWebHashHistory(),
     routes: constantRoutes,
 })
