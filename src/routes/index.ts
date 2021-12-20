@@ -12,6 +12,10 @@ export const constantRoutes: RouteRecordRaw[] = [
     {
         path: '/login',
         component: () => import('../pages/Login/index.vue'),
+    },
+    {
+        path: '/dashboard',
+        component: () => import('../pages/dashboard/index.vue'),
     }
 ]
 

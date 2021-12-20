@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import 'ant-design-vue/dist/antd.css';
+import "ant-design-vue/dist/antd.css";
 </script>
 
 <template>
-    <router-view></router-view>
+  <router-view></router-view>
 </template>
 
 <style>

@@ -23,7 +23,7 @@ import { reactive, ref, h } from "vue";
 import { FormState } from "./interface";
 import { rules, logoImg } from "./utils";
 import type { UnwrapRef } from "vue";
-
+import { login } from "@/api/index"
 
 //切换登录方式（1-账号密码登录 2-手机号登录）
 const activeKey = ref("1");
@@ -85,17 +85,17 @@ const submit = async () => {
             await accountLoginFormRef.value.validateFields()
         } else {
             await mobileLoginFormRef.value.validateFields()
-        }
-        spinning.value = true;
-        setTimeout(() => {
-            spinning.value = false;
-        }, 2000);
+        }  
     } catch (e: any) {
         let { errorFields } = e
         let { errors = [] } = { ...errorFields[0] }
-        spinning.value = false;
         message.error(`${errors[0]}`)
+        return
     }
+    await login({
+        ...formState,
+        loginType:activeKey.value
+    })
 
 
 };
@@ -108,8 +108,8 @@ const submit = async () => {
                 <img class="logo_area_img" alt="Vue logo" :src="logoImg" />
             </div>
             <Spin tip="登录中..." size="large" :indicator="indicator" :spinning="spinning">
-                <Tabs v-model:activeKey="activeKey" @change="changeTabs" centered animated>
-                    <TabPane key="1" tab="账户密码登录">
+                <Tabs v-model:activeKey="activeKey" @change="changeTabs" centered animated >
+                    <TabPane key="1" tab="账户密码登录" force-render>
                         <Form ref="accountLoginFormRef" :rules="rules" :model="formState">
                             <FormItem name="user">
                                 <Input placeholder="请输入用户名" v-model:value="formState.user">
@@ -119,6 +119,7 @@ const submit = async () => {
                                 </Input>
                             </FormItem>
                             <FormItem name="password">
+                            
                                 <InputPassword
                                     v-model:value="formState.password"
                                     type="password"
@@ -167,7 +168,7 @@ const submit = async () => {
                     <a>忘记密码</a>
                 </div>
                 <div class="button_group">
-                    <Button class="button" type="primary" @click.prevent="submit">登录</Button>
+                    <Button class="button" type="primary" @click="submit">登录</Button>
                     <Button class="button" type="primary">注册</Button>
                 </div>
             </Spin>
