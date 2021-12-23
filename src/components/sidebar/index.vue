@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { Menu, MenuItem } from "ant-design-vue";
-import DIYMenu from "../menu/MySubMenu.vue";
+import MySubMenu from "../menu/MySubMenu.vue";
 import { ref } from "vue";
 import type { MenuData } from "../menu/MySubMenu";
-
+import { useRouter } from "vue-router";
 interface Props {
   menuData?: MenuData[];
 }
@@ -13,30 +13,35 @@ const props = withDefaults(defineProps<Props>(), {
   },
 });
 
+const router = useRouter();
+
 const selectedKeys = ref<string[]>([""]);
-const collapsed = ref<boolean>(true);
+
+const clickItem = (item: any) => {
+  console.log(item);
+  router.push(item.link);
+};
 </script>
 
 <template>
   <div>
     <div class="logo" />
-    <Menu
-      v-model:selectedKeys="selectedKeys"
-      :inline-collapsed="collapsed"
-      theme="dark"
-      mode="inline"
-    >
+    <Menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
       <template v-for="item in menuData">
-        <MenuItem v-if="item.children?.length === 0" :key="item.key">
+        <MenuItem
+          v-if="item.children?.length === 0"
+          :key="item.key"
+          @click="clickItem(item)"
+        >
           <template #icon><img style="width: 20px" :src="item.iconSrc" /></template>
           {{ item.title }}
         </MenuItem>
-        <DIYMenu v-else :menuData="item" />
+        <MySubMenu v-else :menuData="item" :clickItem="clickItem" />
       </template>
     </Menu>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 .logo {
   height: 32px;
   margin: 16px;
