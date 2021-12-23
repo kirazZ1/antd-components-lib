@@ -1,10 +1,10 @@
 
 export interface SideBarType{
-    sideBarData?:Array<SideBarItem>
+    sideBarData:Array<SideBarItem>
 }
 
 export interface SideBarItem {
-    key?: string,
+    key: string,
     title?: string,
     iconSrc?: string,
     link?: string,

@@ -10,7 +10,7 @@ import { ref } from "vue";
 import SideBar from "../../components/sidebar/index.vue";
 import TagsBar from "../../components/tagsbar/index.vue";
 import { useRouter, onBeforeRouteUpdate } from "vue-router";
-
+import { searchByRoutes } from "../../utils/func/index";
 const router = useRouter();
 
 const store = useStore();
@@ -22,17 +22,6 @@ Tags.forEach((item, index) => {
     store.commit("TagsBarModule/CHANGE_ACTIVE_TAG", index);
   }
 });
-
-/**根据路由搜索标题 */
-const searchByRoutes = (route: string, sidebar: Array<any>) => {
-  for (let i = 0; i < sidebar.length; i++) {
-    if (sidebar[i]?.link === route) return sidebar[i];
-    if (sidebar[i]?.children?.length !== 0) {
-      return searchByRoutes(route, sidebar[i]?.children);
-    }
-  }
-  return null;
-};
 
 /**根据路由跳转情况来进行标签栏的改变 */
 onBeforeRouteUpdate((to) => {
@@ -95,7 +84,18 @@ const collapsed = ref<boolean>(false);
 <template>
   <Layout>
     <LayoutSider width="250" v-model:collapsed="collapsed" :trigger="null" collapsible>
-      <SideBar :menuData="store.state.SideBarModule.sideBarData" />
+      <SideBar :menuData="store.state.SideBarModule.sideBarData">
+        <div style="display: flex">
+          <div style="margin-left: 10px">
+            <img src="../../assets/logo.png" alt="" style="width: 30px" />
+          </div>
+          <transition name="fade">
+            <div style="margin-left: 20px; white-space: nowrap" v-if="!collapsed">
+              <h1 style="color: white; font-size: 25px; line-height: 32px">Antd Admin</h1>
+            </div>
+          </transition>
+        </div>
+      </SideBar>
     </LayoutSider>
     <Layout>
       <LayoutHeader class="header">
@@ -171,5 +171,15 @@ const collapsed = ref<boolean>(false);
 
 .site-layout .site-layout-background {
   background: #fff;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -10,6 +10,6 @@ type TagsItem = {
 
 export interface TagsBarType {
     activeTag?: number;
-    Tags?:Array<TagsItem>; 
+    Tags:Array<TagsItem>; 
 }
 

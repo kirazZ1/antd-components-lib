@@ -1,16 +1,16 @@
 import { Module } from "vuex";
 import RootStateType from "@/store/interface";
 import { TagsBarType } from "./interface";
-
+import { sideBar } from "@/config/project/sideBar";
 const TagsBarModule: Module<TagsBarType, RootStateType> = {
   namespaced: true,
   state: {
     activeTag: 0,
     Tags: [
       {
-        key: "1",
-        text: "主页",
-        route: "/dashboard/home",
+        key: sideBar[0].key || "1",
+        text: sideBar[0].title || "主页",
+        route: sideBar[0].link || "/dashboard/home",
         closable: false,
       },
     ],
