@@ -1,8 +1,16 @@
+<!--
+ * @Author: KiraZz1
+ * @Date: 2021-12-20 11:23:57
+ * @LastEditTime: 2021-12-25 12:02:10
+ * @LastEditors: KiraZz1
+ * @Description: 使用递归组件的形式实现了根据树形JSON数据显示多级菜单项
+ * @FilePath: /antd-components-lib/src/components/menu/MySubMenu.vue
+-->
 <script lang="ts" setup>
 import { defineProps } from "vue";
 import { SubMenu, MenuItem } from "ant-design-vue";
 import type { MenuData } from "./MySubMenu";
-import { PieChartOutlined } from "@ant-design/icons-vue";
+
 interface Props {
   menuData?: MenuData;
   clickItem?: (...args: any) => void;

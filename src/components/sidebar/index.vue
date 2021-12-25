@@ -1,3 +1,11 @@
+<!--
+ * @Author: KiraZz1
+ * @Date: 2021-12-20 09:45:55
+ * @LastEditTime: 2021-12-25 12:01:19
+ * @LastEditors: KiraZz1
+ * @Description: 封装的侧边栏组件
+ * @FilePath: /antd-components-lib/src/components/sidebar/index.vue
+-->
 <script lang="ts" setup>
 import { Menu, MenuItem } from "ant-design-vue";
 import MySubMenu from "../menu/MySubMenu.vue";

@@ -1,22 +1,21 @@
 <script lang="ts" setup>
-import {
-  UserOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-} from "@ant-design/icons-vue";
-import { Layout, LayoutContent, LayoutHeader, LayoutSider, Avatar } from "ant-design-vue";
-import { useStore } from "../../store/index";
+import { MenuUnfoldOutlined } from "@ant-design/icons-vue";
+import { Layout, LayoutContent, LayoutHeader, LayoutSider, Button } from "ant-design-vue";
+import { useStore } from "@/store/index";
 import { ref } from "vue";
-import SideBar from "../../components/sidebar/index.vue";
-import TagsBar from "../../components/tagsbar/index.vue";
+import SideBar from "@/components/sidebar/index.vue";
+import TagsBar from "@/components/tagsbar/index.vue";
+import Avatar from "@/components/avatar/index.vue";
 import { useRouter, onBeforeRouteUpdate } from "vue-router";
-import { searchByRoutes } from "../../utils/func/index";
+import { searchByRoutes } from "@/utils/func/index";
+
 const router = useRouter();
 
 const store = useStore();
 
 /**每次加载页面根据当前路由设置ActiveTag */
 let { Tags } = store.state.TagsBarModule;
+
 Tags.forEach((item, index) => {
   if (item.route === router.currentRoute.value.path) {
     store.commit("TagsBarModule/CHANGE_ACTIVE_TAG", index);
@@ -60,11 +59,10 @@ const clickTagCallback = (item: any) => {
 const handleCloseTagCallback = (deleteIndex: number, lastIndex: number) => {
   let currentTags = [...store.state.TagsBarModule.Tags];
   let { Tags } = store.state.TagsBarModule;
-
+  let { route } = Tags[lastIndex];
   currentTags.splice(deleteIndex, 1);
   store.commit("TagsBarModule/UPDATE_TAGS", currentTags);
 
-  let { route } = Tags[lastIndex];
   router.push(route);
 };
 
@@ -72,13 +70,30 @@ const handleCloseTagCallback = (deleteIndex: number, lastIndex: number) => {
 const closeAllTagsCallback = () => {
   let { Tags } = store.state.TagsBarModule;
   let currentTags = [Tags[0]];
-
-  store.commit("TagsBarModule/UPDATE_TAGS", currentTags);
   let { route } = Tags[0];
+  store.commit("TagsBarModule/UPDATE_TAGS", currentTags);
+
   router.push(route);
 };
 
+/**点击头像下拉菜单触发 */
+const clickAvatarMenuItem = (item: any) => {
+  console.log("clickItem", item);
+};
+
+/**收起/展开侧边栏 */
 const collapsed = ref<boolean>(false);
+
+const avatarMenu = [
+  {
+    key: 1,
+    text: "查看用户信息",
+  },
+  {
+    key: 2,
+    text: "退出登录",
+  },
+];
 </script>
 
 <template>
@@ -90,7 +105,10 @@ const collapsed = ref<boolean>(false);
             <img src="../../assets/logo.png" alt="" style="width: 30px" />
           </div>
           <transition name="fade">
-            <div style="margin-left: 20px; white-space: nowrap" v-if="!collapsed">
+            <div
+              style="margin-left: 20px; white-space: nowrap; user-select: none"
+              v-if="!collapsed"
+            >
               <h1 style="color: white; font-size: 25px; line-height: 32px">Antd Admin</h1>
             </div>
           </transition>
@@ -100,22 +118,15 @@ const collapsed = ref<boolean>(false);
     <Layout>
       <LayoutHeader class="header">
         <div>
-          <menu-unfold-outlined
-            v-if="collapsed"
-            class="trigger"
-            @click="() => (collapsed = !collapsed)"
-          />
-          <menu-fold-outlined
-            v-else
-            class="trigger"
-            @click="() => (collapsed = !collapsed)"
-          />
+          <Button type="text" shape="circle" @click="() => (collapsed = !collapsed)">
+            <menu-unfold-outlined
+              :class="!collapsed ? 'collapsed_icon_active' : 'collapsed_icon'"
+            />
+          </Button>
         </div>
 
         <div>
-          <Avatar :size="30">
-            <template #icon><UserOutlined /></template>
-          </Avatar>
+          <Avatar @clickItem="clickAvatarMenuItem" :menuData="avatarMenu" />
         </div>
       </LayoutHeader>
       <LayoutContent
@@ -149,6 +160,14 @@ const collapsed = ref<boolean>(false);
   padding: 0 24px;
   cursor: pointer;
   transition: color 0.3s;
+}
+
+.collapsed_icon_active {
+  transform: rotate(180deg);
+}
+
+.collapsed_icon {
+  transform: rotate(0deg);
 }
 
 #components-layout-demo-custom-trigger .trigger:hover {

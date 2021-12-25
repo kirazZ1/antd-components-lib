@@ -2,7 +2,7 @@
 type TagsItem = {
     key?: string,
     text?: string,
-    route?: string,
+    route: string,
     closable?: boolean
 }
 

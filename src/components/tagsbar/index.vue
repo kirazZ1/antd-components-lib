@@ -1,3 +1,11 @@
+<!--
+ * @Author: KiraZz1
+ * @Date: 2021-12-22 16:08:09
+ * @LastEditTime: 2021-12-25 12:04:24
+ * @LastEditors: KiraZz1
+ * @Description: 使用Antd的Tags封装的标签页栏组件
+ * @FilePath: /antd-components-lib/src/components/tagsbar/index.vue
+-->
 <script lang="ts" setup>
 import { Tag, Button } from "ant-design-vue";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
@@ -92,11 +100,7 @@ const scrollButtonVisible = ref<Boolean>(false);
       </div>
     </div>
     <div class="tags-bar-right">
-      <Button
-        type="primary"
-        style="margin: 5px 10px"
-        size="small"
-        @click="closeAllTags"
+      <Button type="primary" style="margin: 5px 10px" size="small" @click="closeAllTags"
         >关闭所有标签页</Button
       >
     </div>
